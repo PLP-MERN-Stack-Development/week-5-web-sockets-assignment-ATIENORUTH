@@ -3,8 +3,8 @@
 import { io } from 'socket.io-client';
 import { useEffect, useState } from 'react';
 
-// Socket.io connection URL
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+// Socket.io connection URL - use environment variable or fallback to current host
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || window.location.origin;
 
 // Create socket instance
 export const socket = io(SOCKET_URL, {
