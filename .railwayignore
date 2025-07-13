@@ -1,4 +1,4 @@
-# Ignore Docker-related files
+# Force Railway to use Nixpacks instead of Docker
 Dockerfile
 .dockerignore
 
