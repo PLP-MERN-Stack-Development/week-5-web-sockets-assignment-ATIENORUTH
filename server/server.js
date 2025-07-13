@@ -25,9 +25,6 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json());
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../client/dist')));
-
 // Store connected users and messages
 const users = {};
 const messages = [];
@@ -120,9 +117,9 @@ app.get('/api/users', (req, res) => {
   res.json(Object.values(users));
 });
 
-// Serve React app for all other routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.json({ message: 'Socket.io Chat Server is running!' });
 });
 
 // Start server
