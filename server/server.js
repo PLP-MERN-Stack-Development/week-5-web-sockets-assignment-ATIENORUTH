@@ -24,7 +24,7 @@ const allowedOrigins = [
   /^https:\/\/week-5-web-sockets-assignment-atienoruth-.*\.vercel\.app$/,
   /^https:\/\/week-5-web-sockets-assignm-git-.*\.vercel\.app$/,
   /^https:\/\/week-5-web-sockets-assignment-atienor-.*\.vercel\.app$/,
-  'http://localhost:5173'
+  'http://localhost:3000'
 ];
 
 // CORS configuration for Express
