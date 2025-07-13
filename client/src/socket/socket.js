@@ -3,34 +3,12 @@
 import { io } from 'socket.io-client';
 import { useEffect, useState } from 'react';
 
-// Socket.io connection URL - use environment variable or fallback to current host
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3000';
+// Socket.io connection URL - use environment variable or fallback to Railway backend
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'https://your-railway-app.up.railway.app';
 
 // Debug: Log the socket URL being used
 console.log('Socket.IO connecting to:', SOCKET_URL);
 console.log('Environment variable VITE_SOCKET_URL:', import.meta.env.VITE_SOCKET_URL);
-
-// Force WebSocket transport and prevent polling
-socket.on('connect_error', (error) => {
-  console.log('Connection error:', error);
-  if (error.message.includes('polling')) {
-    console.log('Polling transport blocked - forcing WebSocket only');
-  }
-});
-
-// Add more detailed connection logging
-socket.on('connect', () => {
-  console.log('✅ Socket.IO connected successfully!');
-  console.log('Socket ID:', socket.id);
-});
-
-socket.on('disconnect', (reason) => {
-  console.log('❌ Socket.IO disconnected:', reason);
-});
-
-socket.on('connect_timeout', () => {
-  console.log('⏰ Socket.IO connection timeout');
-});
 
 // Create socket instance
 // Force WebSocket-only transport for production
@@ -46,6 +24,27 @@ export const socket = io(SOCKET_URL, {
   rememberUpgrade: false,
   forceNew: true,
   rejectUnauthorized: false
+});
+
+// Debug connection events
+socket.on('connect_error', (error) => {
+  console.log('Connection error:', error);
+  if (error.message.includes('polling')) {
+    console.log('Polling transport blocked - forcing WebSocket only');
+  }
+});
+
+socket.on('connect', () => {
+  console.log('✅ Socket.IO connected successfully!');
+  console.log('Socket ID:', socket.id);
+});
+
+socket.on('disconnect', (reason) => {
+  console.log('❌ Socket.IO disconnected:', reason);
+});
+
+socket.on('connect_timeout', () => {
+  console.log('⏰ Socket.IO connection timeout');
 });
 
 // Custom hook for using socket.io
@@ -77,7 +76,7 @@ export const useSocket = () => {
 
   // Send a message
   const sendMessage = (message) => {
-    socket.emit('send_message', { message });
+    socket.emit('send_message', { text: message });
   };
 
   // Send a private message
@@ -112,32 +111,37 @@ export const useSocket = () => {
       setMessages((prev) => [...prev, message]);
     };
 
+    // Message history for new users
+    const onMessageHistory = (history) => {
+      setMessages(history);
+    };
+
     // User events
     const onUserList = (userList) => {
       setUsers(userList);
     };
 
     const onUserJoined = (user) => {
-      // You could add a system message here
+      // Add a system message for user joining
       setMessages((prev) => [
         ...prev,
         {
           id: Date.now(),
           system: true,
-          message: `${user.username} joined the chat`,
+          text: `${user.username} joined the chat`,
           timestamp: new Date().toISOString(),
         },
       ]);
     };
 
     const onUserLeft = (user) => {
-      // You could add a system message here
+      // Add a system message for user leaving
       setMessages((prev) => [
         ...prev,
         {
           id: Date.now(),
           system: true,
-          message: `${user.username} left the chat`,
+          text: `${user.username} left the chat`,
           timestamp: new Date().toISOString(),
         },
       ]);
@@ -153,6 +157,7 @@ export const useSocket = () => {
     socket.on('disconnect', onDisconnect);
     socket.on('receive_message', onReceiveMessage);
     socket.on('private_message', onPrivateMessage);
+    socket.on('message_history', onMessageHistory);
     socket.on('user_list', onUserList);
     socket.on('user_joined', onUserJoined);
     socket.on('user_left', onUserLeft);
@@ -164,6 +169,7 @@ export const useSocket = () => {
       socket.off('disconnect', onDisconnect);
       socket.off('receive_message', onReceiveMessage);
       socket.off('private_message', onPrivateMessage);
+      socket.off('message_history', onMessageHistory);
       socket.off('user_list', onUserList);
       socket.off('user_joined', onUserJoined);
       socket.off('user_left', onUserLeft);

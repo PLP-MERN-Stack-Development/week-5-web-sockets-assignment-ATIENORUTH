@@ -150,6 +150,13 @@
   border-radius: 6px;
   background: #f8f9fa;
   font-size: 0.9rem;
+  transition: background 0.3s;
+}
+
+.user-item.current-user {
+  background: #e3f2fd;
+  color: #1976d2;
+  font-weight: 600;
 }
 
 .user-dot {
@@ -181,6 +188,22 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   max-width: 70%;
   align-self: flex-start;
+  transition: transform 0.2s;
+}
+
+.message.own-message {
+  align-self: flex-end;
+  background: #667eea;
+  color: white;
+}
+
+.message.own-message .message-sender,
+.message.own-message .message-time {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.message.own-message .message-content {
+  color: white;
 }
 
 .message.system {
