@@ -176,12 +176,19 @@ app.get('/api/users', (req, res) => {
 
 // Health check endpoint
 app.get('/', (req, res) => {
+  console.log('Health check requested');
+  console.log('Allowed origins:', allowedOrigins);
+  
   res.json({ 
     message: 'Socket.io Chat Server is running!',
     timestamp: new Date().toISOString(),
     cors: {
-      allowedOrigins: allowedOrigins
-    }
+      allowedOrigins: allowedOrigins.map(origin => 
+        typeof origin === 'string' ? origin : origin.toString()
+      )
+    },
+    environment: process.env.NODE_ENV || 'development',
+    port: process.env.PORT || 8080
   });
 });
 
