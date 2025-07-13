@@ -17,6 +17,7 @@ const server = http.createServer(app);
 // Define allowed origins for CORS
 const allowedOrigins = [
   'https://week-5-web-sockets-assignment-atienoruth-lsni2e6ex.vercel.app',
+  'https://week-5-web-sockets-assignment-atienoruth-7q6l39glm.vercel.app',
   'http://localhost:5173'
 ];
 

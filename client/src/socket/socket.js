@@ -6,6 +6,10 @@ import { useEffect, useState } from 'react';
 // Socket.io connection URL - use environment variable or fallback to current host
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || window.location.origin;
 
+// Debug: Log the socket URL being used
+console.log('Socket.IO connecting to:', SOCKET_URL);
+console.log('Environment variable VITE_SOCKET_URL:', import.meta.env.VITE_SOCKET_URL);
+
 // Create socket instance
 // Force WebSocket-only transport for production
 export const socket = io(SOCKET_URL, {
@@ -15,9 +19,9 @@ export const socket = io(SOCKET_URL, {
   reconnectionDelay: 1000,
   reconnectionDelayMax: 5000,
   timeout: 20000,
-  transports: ['websocket'], // Only use WebSocket
-  upgrade: true,
-  rememberUpgrade: true,
+  transports: ['websocket'], // Only use WebSocket - no polling
+  upgrade: false, // Disable upgrade to prevent polling fallback
+  rememberUpgrade: false,
   forceNew: true
 });
 
