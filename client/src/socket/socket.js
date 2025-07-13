@@ -18,6 +18,20 @@ socket.on('connect_error', (error) => {
   }
 });
 
+// Add more detailed connection logging
+socket.on('connect', () => {
+  console.log('✅ Socket.IO connected successfully!');
+  console.log('Socket ID:', socket.id);
+});
+
+socket.on('disconnect', (reason) => {
+  console.log('❌ Socket.IO disconnected:', reason);
+});
+
+socket.on('connect_timeout', () => {
+  console.log('⏰ Socket.IO connection timeout');
+});
+
 // Create socket instance
 // Force WebSocket-only transport for production
 export const socket = io(SOCKET_URL, {
@@ -44,10 +58,16 @@ export const useSocket = () => {
 
   // Connect to socket server
   const connect = (username) => {
+    console.log('🔄 Attempting to connect to Socket.IO...');
     socket.connect();
-    if (username) {
-      socket.emit('user_join', username);
-    }
+    
+    // Wait for connection before joining
+    socket.once('connect', () => {
+      console.log('✅ Connected, joining as user:', username);
+      if (username) {
+        socket.emit('user_join', username);
+      }
+    });
   };
 
   // Disconnect from socket server
