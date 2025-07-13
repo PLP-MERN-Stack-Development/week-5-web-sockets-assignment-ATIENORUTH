@@ -10,6 +10,14 @@ const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || window.location.origin;
 console.log('Socket.IO connecting to:', SOCKET_URL);
 console.log('Environment variable VITE_SOCKET_URL:', import.meta.env.VITE_SOCKET_URL);
 
+// Force WebSocket transport and prevent polling
+socket.on('connect_error', (error) => {
+  console.log('Connection error:', error);
+  if (error.message.includes('polling')) {
+    console.log('Polling transport blocked - forcing WebSocket only');
+  }
+});
+
 // Create socket instance
 // Force WebSocket-only transport for production
 export const socket = io(SOCKET_URL, {
@@ -22,7 +30,8 @@ export const socket = io(SOCKET_URL, {
   transports: ['websocket'], // Only use WebSocket - no polling
   upgrade: false, // Disable upgrade to prevent polling fallback
   rememberUpgrade: false,
-  forceNew: true
+  forceNew: true,
+  rejectUnauthorized: false
 });
 
 // Custom hook for using socket.io

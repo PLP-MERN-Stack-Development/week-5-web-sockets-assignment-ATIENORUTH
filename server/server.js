@@ -14,10 +14,12 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
-// Define allowed origins for CORS
+// Define allowed origins for CORS - allow all Vercel subdomains
 const allowedOrigins = [
   'https://week-5-web-sockets-assignment-atienoruth-lsni2e6ex.vercel.app',
   'https://week-5-web-sockets-assignment-atienoruth-7q6l39glm.vercel.app',
+  'https://week-5-web-sockets-assignment-atienoruth-kahyjs6dq.vercel.app',
+  /^https:\/\/week-5-web-sockets-assignment-atienoruth-.*\.vercel\.app$/, // Allow any Vercel subdomain
   'http://localhost:5173'
 ];
 
