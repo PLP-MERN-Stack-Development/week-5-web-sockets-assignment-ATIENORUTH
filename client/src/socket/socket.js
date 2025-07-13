@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || window.location.origin;
 
 // Create socket instance
+// Force WebSocket-only transport for production
 export const socket = io(SOCKET_URL, {
   autoConnect: false,
   reconnection: true,
@@ -14,7 +15,7 @@ export const socket = io(SOCKET_URL, {
   reconnectionDelay: 1000,
   reconnectionDelayMax: 5000,
   timeout: 20000,
-  transports: ['websocket', 'polling'],
+  transports: ['websocket'], // Only use WebSocket
   upgrade: true,
   rememberUpgrade: true,
   forceNew: true

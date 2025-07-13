@@ -14,15 +14,15 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
+// Define allowed origins for CORS
+const allowedOrigins = [
+  'https://week-5-web-sockets-assignment-atienoruth-lsni2e6ex.vercel.app',
+  'http://localhost:5173'
+];
+
 // CORS configuration for Express
 app.use(cors({
-  origin: [
-    process.env.CLIENT_URL,
-    'http://localhost:5173',
-    'https://week-5-web-sockets-assignment-atienor-joy-ruth-atienos-projects.vercel.app',
-    'https://week-5-web-sockets-assignment-atienoruth-4hvm77zhf.vercel.app',
-    'https://week-5-web-sockets-assignment-atienoruth-lsni2e6ex.vercel.app'
-  ].filter(Boolean),
+  origin: allowedOrigins,
   methods: ['GET', 'POST', 'OPTIONS'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -31,13 +31,7 @@ app.use(cors({
 // Socket.IO server with improved CORS
 const io = new Server(server, {
   cors: {
-    origin: [
-      process.env.CLIENT_URL,
-      'http://localhost:5173',
-      'https://week-5-web-sockets-assignment-atienor-joy-ruth-atienos-projects.vercel.app',
-      'https://week-5-web-sockets-assignment-atienoruth-4hvm77zhf.vercel.app',
-      'https://week-5-web-sockets-assignment-atienoruth-lsni2e6ex.vercel.app'
-    ].filter(Boolean),
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'OPTIONS'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -147,13 +141,7 @@ app.get('/', (req, res) => {
     message: 'Socket.io Chat Server is running!',
     timestamp: new Date().toISOString(),
     cors: {
-      allowedOrigins: [
-        process.env.CLIENT_URL,
-        'http://localhost:5173',
-        'https://week-5-web-sockets-assignment-atienor-joy-ruth-atienos-projects.vercel.app',
-        'https://week-5-web-sockets-assignment-atienoruth-4hvm77zhf.vercel.app',
-        'https://week-5-web-sockets-assignment-atienoruth-lsni2e6ex.vercel.app'
-      ].filter(Boolean)
+      allowedOrigins: allowedOrigins
     }
   });
 });
