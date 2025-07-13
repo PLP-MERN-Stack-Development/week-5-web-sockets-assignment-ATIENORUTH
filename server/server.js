@@ -19,7 +19,8 @@ const io = new Server(server, {
       process.env.CLIENT_URL,
       'http://localhost:5173',
       'https://week-5-web-sockets-assignment-atienor-joy-ruth-atienos-projects.vercel.app',
-      'https://week-5-web-sockets-assignment-atienoruth-4hvm77zhf.vercel.app'
+      'https://week-5-web-sockets-assignment-atienoruth-4hvm77zhf.vercel.app',
+      'https://week-5-web-sockets-assignment-atienoruth-lsni2e6ex.vercel.app'
     ].filter(Boolean),
     methods: ['GET', 'POST'],
     credentials: true,
