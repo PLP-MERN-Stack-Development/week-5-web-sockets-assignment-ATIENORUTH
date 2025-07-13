@@ -13,6 +13,22 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 const server = http.createServer(app);
+
+// CORS configuration for Express
+app.use(cors({
+  origin: [
+    process.env.CLIENT_URL,
+    'http://localhost:5173',
+    'https://week-5-web-sockets-assignment-atienor-joy-ruth-atienos-projects.vercel.app',
+    'https://week-5-web-sockets-assignment-atienoruth-4hvm77zhf.vercel.app',
+    'https://week-5-web-sockets-assignment-atienoruth-lsni2e6ex.vercel.app'
+  ].filter(Boolean),
+  methods: ['GET', 'POST', 'OPTIONS'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Socket.IO server with improved CORS
 const io = new Server(server, {
   cors: {
     origin: [
@@ -22,13 +38,15 @@ const io = new Server(server, {
       'https://week-5-web-sockets-assignment-atienoruth-4hvm77zhf.vercel.app',
       'https://week-5-web-sockets-assignment-atienoruth-lsni2e6ex.vercel.app'
     ].filter(Boolean),
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'OPTIONS'],
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
   },
+  transports: ['websocket', 'polling'],
+  allowEIO3: true
 });
 
 // Middleware
-app.use(cors());
 app.use(express.json());
 
 // Store connected users and messages
@@ -125,7 +143,24 @@ app.get('/api/users', (req, res) => {
 
 // Health check endpoint
 app.get('/', (req, res) => {
-  res.json({ message: 'Socket.io Chat Server is running!' });
+  res.json({ 
+    message: 'Socket.io Chat Server is running!',
+    timestamp: new Date().toISOString(),
+    cors: {
+      allowedOrigins: [
+        process.env.CLIENT_URL,
+        'http://localhost:5173',
+        'https://week-5-web-sockets-assignment-atienor-joy-ruth-atienos-projects.vercel.app',
+        'https://week-5-web-sockets-assignment-atienoruth-4hvm77zhf.vercel.app',
+        'https://week-5-web-sockets-assignment-atienoruth-lsni2e6ex.vercel.app'
+      ].filter(Boolean)
+    }
+  });
+});
+
+// Socket.IO endpoint for testing
+app.get('/socket.io/', (req, res) => {
+  res.json({ message: 'Socket.IO endpoint is accessible' });
 });
 
 // Start server

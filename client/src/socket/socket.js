@@ -10,9 +10,14 @@ const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || window.location.origin;
 export const socket = io(SOCKET_URL, {
   autoConnect: false,
   reconnection: true,
-  reconnectionAttempts: 5,
+  reconnectionAttempts: 10,
   reconnectionDelay: 1000,
+  reconnectionDelayMax: 5000,
+  timeout: 20000,
   transports: ['websocket', 'polling'],
+  upgrade: true,
+  rememberUpgrade: true,
+  forceNew: true
 });
 
 // Custom hook for using socket.io
