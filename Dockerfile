@@ -1,8 +1,22 @@
-# This Dockerfile is intentionally minimal
-# Railway should use Nixpacks instead of Docker
+# Use Node.js 18 as base image
 FROM node:18-alpine
+
+# Set working directory
 WORKDIR /app
-COPY . .
+
+# Copy package files
+COPY package*.json ./
+COPY server/package*.json ./server/
+
+# Install dependencies
 RUN npm install
-EXPOSE 5000
+RUN cd server && npm install
+
+# Copy source code
+COPY . .
+
+# Expose port
+EXPOSE 8080
+
+# Start the server
 CMD ["npm", "start"] 
