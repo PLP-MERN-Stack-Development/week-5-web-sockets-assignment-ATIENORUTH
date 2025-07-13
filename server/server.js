@@ -15,7 +15,12 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: [
+      process.env.CLIENT_URL,
+      'http://localhost:5173',
+      'https://week-5-web-sockets-assignment-atienor-joy-ruth-atienos-projects.vercel.app',
+      'https://week-5-web-sockets-assignment-atienoruth-4hvm77zhf.vercel.app'
+    ].filter(Boolean),
     methods: ['GET', 'POST'],
     credentials: true,
   },
