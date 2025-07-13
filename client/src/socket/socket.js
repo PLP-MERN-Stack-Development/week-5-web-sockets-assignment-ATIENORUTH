@@ -3,8 +3,9 @@
 import { io } from 'socket.io-client';
 import { useEffect, useState } from 'react';
 
-// Socket.io connection URL - use environment variable or fallback to Railway backend
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'https://your-railway-app.up.railway.app';
+// Socket.io connection URL - hardcoded to Railway backend
+const SOCKET_URL = 'https://focused-enchantment-production-35c9.up.railway.app';
+
 
 // Debug: Log the socket URL being used
 console.log('Socket.IO connecting to:', SOCKET_URL);
