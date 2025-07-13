@@ -19,13 +19,33 @@ const allowedOrigins = [
   'https://week-5-web-sockets-assignment-atienoruth-lsni2e6ex.vercel.app',
   'https://week-5-web-sockets-assignment-atienoruth-7q6l39glm.vercel.app',
   'https://week-5-web-sockets-assignment-atienoruth-kahyjs6dq.vercel.app',
-  /^https:\/\/week-5-web-sockets-assignment-atienoruth-.*\.vercel\.app$/, // Allow any Vercel subdomain
+  'https://week-5-web-sockets-assignm-git-d2d89a-joy-ruth-atienos-projects.vercel.app',
+  'https://week-5-web-sockets-assignment-atienor-joy-ruth-atienos-projects.vercel.app',
+  /^https:\/\/week-5-web-sockets-assignment-atienoruth-.*\.vercel\.app$/,
+  /^https:\/\/week-5-web-sockets-assignm-git-.*\.vercel\.app$/,
+  /^https:\/\/week-5-web-sockets-assignment-atienor-.*\.vercel\.app$/,
   'http://localhost:5173'
 ];
 
 // CORS configuration for Express
 app.use(cors({
-  origin: allowedOrigins,
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin is in allowedOrigins array
+    for (let allowedOrigin of allowedOrigins) {
+      if (typeof allowedOrigin === 'string' && allowedOrigin === origin) {
+        return callback(null, true);
+      }
+      if (allowedOrigin instanceof RegExp && allowedOrigin.test(origin)) {
+        return callback(null, true);
+      }
+    }
+    
+    console.log('CORS blocked origin:', origin);
+    return callback(new Error('Not allowed by CORS'));
+  },
   methods: ['GET', 'POST', 'OPTIONS'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -34,7 +54,23 @@ app.use(cors({
 // Socket.IO server with improved CORS
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      // Check if origin is in allowedOrigins array
+      for (let allowedOrigin of allowedOrigins) {
+        if (typeof allowedOrigin === 'string' && allowedOrigin === origin) {
+          return callback(null, true);
+        }
+        if (allowedOrigin instanceof RegExp && allowedOrigin.test(origin)) {
+          return callback(null, true);
+        }
+      }
+      
+      console.log('Socket.IO CORS blocked origin:', origin);
+      return callback(new Error('Not allowed by CORS'));
+    },
     methods: ['GET', 'POST', 'OPTIONS'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
