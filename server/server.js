@@ -14,66 +14,33 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
-// Define allowed origins for CORS - allow all Vercel subdomains
+// Define allowed origins for CORS
 const allowedOrigins = [
-  'https://week-5-web-sockets-assignment-atienoruth-lsni2e6ex.vercel.app',
-  'https://week-5-web-sockets-assignment-atienoruth-7q6l39glm.vercel.app',
-  'https://week-5-web-sockets-assignment-atienoruth-kahyjs6dq.vercel.app',
-  'https://week-5-web-sockets-assignm-git-d2d89a-joy-ruth-atienos-projects.vercel.app',
-  'https://week-5-web-sockets-assignment-atienor-joy-ruth-atienos-projects.vercel.app',
-  /^https:\/\/week-5-web-sockets-assignment-atienoruth-.*\.vercel\.app$/,
-  /^https:\/\/week-5-web-sockets-assignm-git-.*\.vercel\.app$/,
-  /^https:\/\/week-5-web-sockets-assignment-atienor-.*\.vercel\.app$/,
-  'http://localhost:3000'
+  'http://localhost:5173',
+  'https://week-5-web-sockets-assignment-atienoruth-lsni2e6ex.vercel.app'
 ];
 
 // CORS configuration for Express
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    // Check if origin is in allowedOrigins array
-    for (let allowedOrigin of allowedOrigins) {
-      if (typeof allowedOrigin === 'string' && allowedOrigin === origin) {
-        return callback(null, true);
-      }
-      if (allowedOrigin instanceof RegExp && allowedOrigin.test(origin)) {
-        return callback(null, true);
-      }
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
     }
-    
-    console.log('CORS blocked origin:', origin);
-    return callback(new Error('Not allowed by CORS'));
   },
-  methods: ['GET', 'POST', 'OPTIONS'],
-  credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization']
+  credentials: true
 }));
 
-// Socket.IO server with improved CORS
+// Socket.IO server with CORS
 const io = new Server(server, {
   cors: {
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
-      
-      // Check if origin is in allowedOrigins array
-      for (let allowedOrigin of allowedOrigins) {
-        if (typeof allowedOrigin === 'string' && allowedOrigin === origin) {
-          return callback(null, true);
-        }
-        if (allowedOrigin instanceof RegExp && allowedOrigin.test(origin)) {
-          return callback(null, true);
-        }
-      }
-      
-      console.log('Socket.IO CORS blocked origin:', origin);
-      return callback(new Error('Not allowed by CORS'));
-    },
-    methods: ['GET', 'POST', 'OPTIONS'],
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization']
+    origin: [
+      'http://localhost:5173',
+      'https://week-5-web-sockets-assignment-atienoruth-lsni2e6ex.vercel.app'
+    ],
+    methods: ["GET", "POST"],
+    credentials: true
   },
   transports: ['websocket', 'polling'],
   allowEIO3: true
