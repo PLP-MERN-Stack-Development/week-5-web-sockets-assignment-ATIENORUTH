@@ -1,0 +1,13 @@
+# Ignore Docker-related files
+Dockerfile
+.dockerignore
+
+# Ignore client files since we're deploying server only
+client/
+client-dist/
+
+# Ignore other deployment configs
+render.yaml
+VERCEL_DEPLOYMENT.md
+RAILWAY_DEPLOYMENT.md
+DEPLOYMENT.md 
