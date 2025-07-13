@@ -2,10 +2,25 @@ services:
   - type: web
     name: socket-io-chat
     env: node
-    buildCommand: npm run build
-    startCommand: npm start
+    buildCommand: |
+      echo "=== BUILDING APPLICATION ==="
+      npm install
+      echo "✅ Server dependencies installed"
+      cd client
+      npm install
+      echo "✅ Client dependencies installed"
+      npm run build
+      echo "✅ React frontend built to client/dist"
+      cd ..
+      echo "✅ Build complete - ready for deployment"
+    startCommand: |
+      echo "=== STARTING SERVER ==="
+      echo "✅ Using server.js with static frontend"
+      echo "✅ Serving from client/dist"
+      echo "✅ Server will run on PORT: $PORT"
+      node server/server.js
     envVars:
       - key: NODE_ENV
         value: production
-      - key: CLIENT_URL
-        value: https://your-app-name.onrender.com 
+      - key: PORT
+        value: 10000 
